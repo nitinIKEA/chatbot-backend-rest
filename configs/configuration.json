@@ -1,0 +1,16 @@
+{
+    "dbconfig_dev": {
+        "db_host": "CFSEELM-AX2084.ikeadt.com",
+        "db_port": "1521",
+        "db_service_name": "CF0614.IKEADT.COM",
+        "db_user_name": "WIS_DATA",
+        "db_password": "h22U9076"
+    },
+    "dbconfig_test": {
+        "db_host": "CFSEELM-AX2191.ikeadt.com",
+        "db_port": "1521",
+        "db_service_name": "CF1183.IKEADT.COM",
+        "db_user_name": "WIS_DATA",
+        "db_password": "h22U9076"
+    }
+}
