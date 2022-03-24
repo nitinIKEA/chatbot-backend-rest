@@ -1,33 +1,73 @@
 package db
 
 var Queries = map[string]string{
-	"QueryOrderstatusManordref": `select lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,o.ord_status
+	"QueryOrderstatusManordref": `select o.ord_id_ref_req, lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,case 
+	when o.ord_status ='30' then 'RELEASED TO WMS'
+	when o.ord_status ='40' then 'RECEIVED BY WMS'
+	when o.ord_status ='50' then 'PLANNED'
+	when o.ord_status ='60' then 'PICKING'
+	when o.ord_status ='70' then 'PICKED'
+	when o.ord_status ='80' then 'LOADED'
+	when o.ord_status ='90' then 'CANCELLED'
+	when o.ord_status ='91' then 'NOT ALLOCATED'
+	when o.ord_status ='92' then 'UNALLOCATED'
+	END ORD_STATUS
 	from orders o
 	join order_lines ol on (o.ord_id=ol.ord_id)
 	join logistic_units lu on (o.lu_tk=lu.lu_tk)
 	where o.ord_id_ref_req = '%s'
-	group by lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
+	group by  o.ord_id_ref_req,lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
 
-	"QueryOrderstatusOrdidref": `select lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,o.ord_status
+	"QueryOrderstatusOrdidref": `select o.org_ord_ref, lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,case 
+	when o.ord_status ='30' then 'RELEASED TO WMS'
+	when o.ord_status ='40' then 'RECEIVED BY WMS'
+	when o.ord_status ='50' then 'PLANNED'
+	when o.ord_status ='60' then 'PICKING'
+	when o.ord_status ='70' then 'PICKED'
+	when o.ord_status ='80' then 'LOADED'
+	when o.ord_status ='90' then 'CANCELLED'
+	when o.ord_status ='91' then 'NOT ALLOCATED'
+	when o.ord_status ='92' then 'UNALLOCATED'
+	END ORD_STATUS
 	from orders o
 	join order_lines ol on (o.ord_id=ol.ord_id)
 	join logistic_units lu on (o.lu_tk=lu.lu_tk)
 	where o.org_ord_ref = '%s'
-	group by lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
+	group by o.org_ord_ref,lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
 
-	"QueryOrderstatusOrdref": `select lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,o.ord_status
+	"QueryOrderstatusOrdref": `select o.ord_id_ref_sales,lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,case 
+	when o.ord_status ='30' then 'RELEASED TO WMS'
+	when o.ord_status ='40' then 'RECEIVED BY WMS'
+	when o.ord_status ='50' then 'PLANNED'
+	when o.ord_status ='60' then 'PICKING'
+	when o.ord_status ='70' then 'PICKED'
+	when o.ord_status ='80' then 'LOADED'
+	when o.ord_status ='90' then 'CANCELLED'
+	when o.ord_status ='91' then 'NOT ALLOCATED'
+	when o.ord_status ='92' then 'UNALLOCATED'
+	END ORD_STATUS
 	from orders o
 	join order_lines ol on (o.ord_id=ol.ord_id)
 	join logistic_units lu on (o.lu_tk=lu.lu_tk)
 	where o.ord_id_ref_sales = '%s'
-	group by lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
+	group by o.ord_id_ref_sales,lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
 
-	"QueryOrderstatusWrkordref": `select lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,o.ord_status
+	"QueryOrderstatusWrkordref": `select o.ord_id_ref_wrk,lu.bu_code,lu.bu_type,o.ord_id executable_order_id,count(ol.ordl_id) total_order_line,case 
+	when o.ord_status ='30' then 'RELEASED TO WMS'
+	when o.ord_status ='40' then 'RECEIVED BY WMS'
+	when o.ord_status ='50' then 'PLANNED'
+	when o.ord_status ='60' then 'PICKING'
+	when o.ord_status ='70' then 'PICKED'
+	when o.ord_status ='80' then 'LOADED'
+	when o.ord_status ='90' then 'CANCELLED'
+	when o.ord_status ='91' then 'NOT ALLOCATED'
+	when o.ord_status ='92' then 'UNALLOCATED'
+	END ORD_STATUS
 	from orders o
 	join order_lines ol on (o.ord_id=ol.ord_id)
 	join logistic_units lu on (o.lu_tk=lu.lu_tk)
 	where o.ord_id_ref_wrk = '%s'
-	group by lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
+	group by o.ord_id_ref_wrk,lu.bu_code,lu.bu_type,o.ord_id,o.ord_status`,
 
 	"QueryStockavailabilityAvailable": `WITH
 	sv

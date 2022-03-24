@@ -7,12 +7,40 @@ import (
 	"github.com/godror/godror"
 )
 
-type OrderStatus struct {
+type OrderStatusManordref struct {
+	OrdIDRefReq       string        `json:"ORD_ID_REF_REQ"`
 	BUCode            string        `json:"BU_CODE"`
 	BUType            string        `json:"BU_TYPE"`
 	ExecutableOrderID string        `json:"EXECUTABLE_ORDER_ID"`
 	TotalOrderLine    godror.Number `json:"TOTAL_ORDER_LINE"`
-	OrdStatus         int64         `json:"ORD_STATUS"`
+	OrdStatus         string        `json:"ORD_STATUS"`
+}
+
+type OrderStatusOrdidref struct {
+	OrgOrdRef         string        `json:"ORG_ORD_REF"`
+	BUCode            string        `json:"BU_CODE"`
+	BUType            string        `json:"BU_TYPE"`
+	ExecutableOrderID string        `json:"EXECUTABLE_ORDER_ID"`
+	TotalOrderLine    godror.Number `json:"TOTAL_ORDER_LINE"`
+	OrdStatus         string        `json:"ORD_STATUS"`
+}
+
+type OrderStatusOrdref struct {
+	OrdIDRefSales     string        `json:"ORD_ID_REF_SALES"`
+	BUCode            string        `json:"BU_CODE"`
+	BUType            string        `json:"BU_TYPE"`
+	ExecutableOrderID string        `json:"EXECUTABLE_ORDER_ID"`
+	TotalOrderLine    godror.Number `json:"TOTAL_ORDER_LINE"`
+	OrdStatus         string        `json:"ORD_STATUS"`
+}
+
+type OrderStatusWrkordref struct {
+	OrdIDRefWrk       string        `json:"ORD_ID_REF_WRK"`
+	BUCode            string        `json:"BU_CODE"`
+	BUType            string        `json:"BU_TYPE"`
+	ExecutableOrderID string        `json:"EXECUTABLE_ORDER_ID"`
+	TotalOrderLine    godror.Number `json:"TOTAL_ORDER_LINE"`
+	OrdStatus         string        `json:"ORD_STATUS"`
 }
 
 type PickingGroup struct {
@@ -43,38 +71,90 @@ type BlockedStock struct {
 
 func (c DBConns) QueryOrderstatusManordref(ordidrefreq, env string) ([]byte, error) {
 	qry := fmt.Sprintf(Queries["QueryOrderstatusManordref"], ordidrefreq)
-	data, err := c.orderStatusQuery(qry, env)
+	dest := OrderStatusManordref{}
+	data := []OrderStatusManordref{}
+	rows, err := c[env].Query(qry)
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	for rows.Next() {
+		if err := rows.Scan(&dest.OrdIDRefReq, &dest.BUCode, &dest.BUType, &dest.ExecutableOrderID, &dest.TotalOrderLine, &dest.OrdStatus); err != nil {
+			return nil, err
+		}
+		data = append(data, dest)
+	}
+
+	res, err := prepareDataJson(data)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (c DBConns) QueryOrderstatusOrdidref(orgordref, env string) ([]byte, error) {
 	qry := fmt.Sprintf(Queries["QueryOrderstatusOrdidref"], orgordref)
-	data, err := c.orderStatusQuery(qry, env)
+	dest := OrderStatusOrdidref{}
+	data := []OrderStatusOrdidref{}
+	rows, err := c[env].Query(qry)
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	for rows.Next() {
+		if err := rows.Scan(&dest.OrgOrdRef, &dest.BUCode, &dest.BUType, &dest.ExecutableOrderID, &dest.TotalOrderLine, &dest.OrdStatus); err != nil {
+			return nil, err
+		}
+		data = append(data, dest)
+	}
+
+	res, err := prepareDataJson(data)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (c DBConns) QueryOrderstatusOrdref(ordIdRefSales string, env string) ([]byte, error) {
 	qry := fmt.Sprintf(Queries["QueryOrderstatusOrdref"], ordIdRefSales)
-	data, err := c.orderStatusQuery(qry, env)
+	dest := OrderStatusOrdref{}
+	data := []OrderStatusOrdref{}
+	rows, err := c[env].Query(qry)
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	for rows.Next() {
+		if err := rows.Scan(&dest.OrdIDRefSales, &dest.BUCode, &dest.BUType, &dest.ExecutableOrderID, &dest.TotalOrderLine, &dest.OrdStatus); err != nil {
+			return nil, err
+		}
+		data = append(data, dest)
+	}
+
+	res, err := prepareDataJson(data)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (c DBConns) QueryOrderstatusWrkordref(ordidrefwork, env string) ([]byte, error) {
 	qry := fmt.Sprintf(Queries["QueryOrderstatusWrkordref"], ordidrefwork)
-	data, err := c.orderStatusQuery(qry, env)
+	dest := OrderStatusWrkordref{}
+	data := []OrderStatusWrkordref{}
+	rows, err := c[env].Query(qry)
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	for rows.Next() {
+		if err := rows.Scan(&dest.OrdIDRefWrk, &dest.BUCode, &dest.BUType, &dest.ExecutableOrderID, &dest.TotalOrderLine, &dest.OrdStatus); err != nil {
+			return nil, err
+		}
+		data = append(data, dest)
+	}
+
+	res, err := prepareDataJson(data)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (c DBConns) QueryPickingroup(storenum, env string) ([]byte, error) {
@@ -146,25 +226,4 @@ func prepareDataJson(data interface{}) ([]byte, error) {
 		return nil, err
 	}
 	return dt, nil
-}
-
-func (c DBConns) orderStatusQuery(qry, env string) ([]byte, error) {
-	dest := OrderStatus{}
-	data := []OrderStatus{}
-	rows, err := c[env].Query(qry)
-	if err != nil {
-		return nil, err
-	}
-	for rows.Next() {
-		if err := rows.Scan(&dest.BUCode, &dest.BUType, &dest.ExecutableOrderID, &dest.TotalOrderLine, &dest.OrdStatus); err != nil {
-			return nil, err
-		}
-		data = append(data, dest)
-	}
-
-	res, err := prepareDataJson(data)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
 }
