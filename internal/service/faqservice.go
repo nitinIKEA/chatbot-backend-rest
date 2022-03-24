@@ -10,15 +10,15 @@ func (s *Service) FaqDetailedfaqGet(w http.ResponseWriter, r *http.Request) {
 	var message string
 	vars := mux.Vars(r)
 	switch vars["detailedfaq"] {
-	case "Create Showroom Order":
+	case "Create-Showroom-Order":
 		message = `How to create a showroom order?
 		For more details refer below:
 		https://confluence.build.ingka.ikea.com/display/ILO/.DD+UC919+Create+Showroom+Order+vBase`
-	case "Return order":
+	case "Return-Order":
 		message = `How to create a return order?
 		For more details refer below:
 		https://confluence.build.ingka.ikea.com/display/ILO/.DD+UC903+Create+Return+Order+vBase`
-	case "Clearing order":
+	case "Clearing-Order":
 		message = `How to create a clearing order?
 		For more details refer below:
 		https://confluence.build.ingka.ikea.com/display/ILO/.DD+UC902+Create+Clearing+Order+vBase`
