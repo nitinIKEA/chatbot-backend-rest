@@ -22,8 +22,8 @@ func GetConnections(conf *config.Conf) DBConns {
 	connectionParams.Username = conf.DBConfigDev.DBUserName
 	connectionParams.Password = godror.NewPassword(conf.DBConfigDev.DBPassword)
 	// log.Print("Connect to ", connectionParams.ConnectString)
-	conns["Dev"] = sql.OpenDB(godror.NewConnector(connectionParams))
-	if err := conns["Dev"].Ping(); err != nil {
+	conns["DEV"] = sql.OpenDB(godror.NewConnector(connectionParams))
+	if err := conns["DEV"].Ping(); err != nil {
 		log.Fatalf("error while ping to Dev database: %v", err)
 	}
 
@@ -33,8 +33,8 @@ func GetConnections(conf *config.Conf) DBConns {
 	connectionParams.Username = conf.DBConfigTest.DBUserName
 	connectionParams.Password = godror.NewPassword(conf.DBConfigTest.DBPassword)
 	// log.Print("Connect to ", connectionParams.ConnectString)
-	conns["Test"] = sql.OpenDB(godror.NewConnector(connectionParams))
-	if err := conns["Test"].Ping(); err != nil {
+	conns["TEST"] = sql.OpenDB(godror.NewConnector(connectionParams))
+	if err := conns["TEST"].Ping(); err != nil {
 		log.Fatalf("error while ping to Test database: %v", err)
 	}
 	return conns
